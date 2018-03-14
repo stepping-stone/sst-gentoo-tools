@@ -1,8 +1,10 @@
 #!/bin/sh -e
 
-echo 'Analyzing `emerge -pvuDN --with-bdeps=y @world` ...'
+args=${@:-@world}
 
-emerge -pvuDN --with-bdeps=y @world --columns 2>&1 \
+echo "Analyzing \`emerge -pvuDN --with-bdeps=y $args\` ..." >&2
+
+time emerge --columns -pvuDN --with-bdeps=y @world $args 2>&1 \
 | awk '/^\[/ && $2 ~ /[UN]/ {
 	state=$2
 	ebuild=$4
